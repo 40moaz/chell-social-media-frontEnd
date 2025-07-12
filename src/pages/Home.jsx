@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Search } from "lucide-react";
 import { useOutletContext } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
