@@ -451,7 +451,7 @@ const SignUp = () => {
             {/* Birthday Input */}
             <div>
               <label className="text-sm font-medium text-gray-700 block mb-1">
-                Enter Your Birthday
+                Enter Your Birthday.
               </label>
               <div
                 className={`flex space-x-2 bg-gray-50 border rounded-md p-2 justify-between items-center
