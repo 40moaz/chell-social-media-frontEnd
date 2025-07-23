@@ -21,7 +21,7 @@ const StoriesSection = ({ currentUser }) => {
   const [selectedStoryInitialIndex, setSelectedStoryInitialIndex] = useState(0); // Index for the current story in the viewer
   const [usersWithStories, setUsersWithStories] = useState([]); // To hold unique users who have stories
   const storiesContainerRef = useRef(null);
-
+  const [viewedStories, setViewedStories] = useState({});
   const fetchStories = async () => {
     try {
       const res = await instance.get("/stories");
@@ -178,10 +178,18 @@ const StoriesSection = ({ currentUser }) => {
           initialStoryIndex={selectedStoryInitialIndex}
           onClose={() => setShowStoryViewerModal(false)}
           onView={async (storyId) => {
-            try {
-              await instance.put(`/stories/${storyId}/view`);
-            } catch (e) {
-              console.error("Error marking viewed:", e);
+            // تحقق من عدم وجود الستوري في قائمة الـ stories اللي تم مشاهدتها
+            if (!viewedStories[storyId]) {
+              try {
+                // أرسل طلب الـ API
+                await instance.put(`/stories/${storyId}/view`);
+                // لو نجح الطلب، ضيف الستوري لقائمة الـ stories اللي تم مشاهدتها
+                setViewedStories((prev) => ({ ...prev, [storyId]: true }));
+              } catch (e) {
+                console.error("Error marking viewed:", e);
+              }
+            } else {
+              console.log(`Story ${storyId} already marked as viewed. Skipping API call.`);
             }
           }}
         />

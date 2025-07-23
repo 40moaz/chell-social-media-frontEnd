@@ -400,7 +400,9 @@ const StoryViewerModal = ({
         <div className="fixed inset-0 bg-[#000000bd] flex items-center justify-center z-50 p-4">
           <div className="relative w-full max-w-sm h-auto max-h-[80vh] bg-gray-800 rounded-lg overflow-hidden flex flex-col p-6">
             <h2 className="text-white text-xl font-bold mb-4">
-              Viewers ({viewers.length -1})
+              Viewers {
+                 (viewers.length > 0 ) ? viewers.length -1 : viewers.length 
+              }
             </h2>
 
             <button
