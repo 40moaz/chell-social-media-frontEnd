@@ -15,8 +15,8 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+1"); // Default to +1
+  // const [phoneNumber, setPhoneNumber] = useState("");
+  // const [countryCode, setCountryCode] = useState("+1"); // Default to +1
   const [selectedMonth, setSelectedMonth] = useState("Jan");
   const [selectedDay, setSelectedDay] = useState("01");
   const [selectedYear, setSelectedYear] = useState(
@@ -107,20 +107,20 @@ const SignUp = () => {
   };
 
   // Dummy country codes for the select dropdown (expanded slightly)
-  const countryCodes = [
-    { code: "+1", name: "USA" },
-    { code: "+44", name: "UK" },
-    { code: "+91", name: "India" },
-    { code: "+20", name: "Egypt" },
-    { code: "+49", name: "Germany" },
-    { code: "+33", name: "France" },
-    { code: "+81", name: "Japan" },
-    { code: "+86", name: "China" },
-    { code: "+55", name: "Brazil" },
-    { code: "+7", name: "Russia" },
-    { code: "+61", name: "Australia" },
-    { code: "+27", name: "South Africa" },
-  ];
+  // const countryCodes = [
+  //   { code: "+1", name: "USA" },
+  //   { code: "+44", name: "UK" },
+  //   { code: "+91", name: "India" },
+  //   { code: "+20", name: "Egypt" },
+  //   { code: "+49", name: "Germany" },
+  //   { code: "+33", name: "France" },
+  //   { code: "+81", name: "Japan" },
+  //   { code: "+86", name: "China" },
+  //   { code: "+55", name: "Brazil" },
+  //   { code: "+7", name: "Russia" },
+  //   { code: "+61", name: "Australia" },
+  //   { code: "+27", name: "South Africa" },
+  // ];
 
   // --- Validation Function ---
   const validateForm = () => {
@@ -158,16 +158,6 @@ const SignUp = () => {
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = "Email address is invalid.";
-      isValid = false;
-    }
-
-    // Phone Number Validation
-    if (!phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required.";
-      isValid = false;
-    } else if (!/^\d{7,15}$/.test(phoneNumber.replace(/\s/g, ""))) {
-      // Allows 7-15 digits, removes spaces for validation
-      newErrors.phoneNumber = "Phone number must be 7-15 digits.";
       isValid = false;
     }
 
@@ -235,13 +225,6 @@ const SignUp = () => {
       newErrors.password =
         "Password must contain at least one lowercase letter.";
       isValid = false;
-    } else if (!/[0-9]/.test(password)) {
-      newErrors.password = "Password must contain at least one number.";
-      isValid = false;
-    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      newErrors.password =
-        "Password must contain at least one special character.";
-      isValid = false;
     }
 
     // Confirm Password Validation
@@ -265,7 +248,7 @@ const SignUp = () => {
           fullName,
           username,
           email,
-          phone: countryCode + phoneNumber,
+          phone: "+201111111111",
           birthday: `${selectedMonth} ${selectedDay}, ${selectedYear}`,
           password,
           profileImage: "",
@@ -402,49 +385,6 @@ const SignUp = () => {
               />
               {errors.email && (
                 <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
-            </div>
-
-            {/* Phone Number Input */}
-            <div>
-              <label
-                htmlFor="phoneNumber"
-                className="text-sm font-medium text-gray-700 block mb-1"
-              >
-                Enter Your Phone Number
-              </label>
-              <div
-                className={`flex rounded-md border bg-gray-50 focus-within:ring-2
-                ${
-                  errors.phoneNumber
-                    ? "border-red-500 focus-within:ring-red-500"
-                    : "border-gray-300 focus-within:ring-blue-500"
-                }`}
-              >
-                <select
-                  value={countryCode}
-                  onChange={(e) => setCountryCode(e.target.value)}
-                  className="px-3 py-2 bg-gray-50 border-r border-gray-300 rounded-l-md focus:outline-none appearance-none"
-                >
-                  {countryCodes.map((cc) => (
-                    <option key={cc.code} value={cc.code}>
-                      {cc.code}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="tel"
-                  id="phoneNumber"
-                  placeholder=""
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="flex-grow px-3 py-2 bg-gray-50 rounded-r-md focus:outline-none"
-                />
-              </div>
-              {errors.phoneNumber && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.phoneNumber}
-                </p>
               )}
             </div>
 

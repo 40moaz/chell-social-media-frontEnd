@@ -528,13 +528,14 @@ const Profile = ({
         <div className="bg-white rounded-lg shadow p-4 space-y-2">
           {renderField("Location", user.location, "location")}
           {renderField("Website", user.website, "website")}
-          {/* Ensure birthday is formatted if it's a Date object */}
           {renderField(
             "Birthday",
             user.birthday ? moment(user.birthday).format("MMM D, YYYY") : null,
             "birthday"
           )}
           {renderField("Email", user.email, "email")}
+          {/* Add the new 'phone' field here */}
+          {renderField("Phone", user.phone, "phone")}
         </div>
       </div>
 
