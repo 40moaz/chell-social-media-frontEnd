@@ -201,8 +201,8 @@ const AddStoryModal = ({ onClose, currentUser, onStoryPosted }) => {
 
           {/* Action buttons (Add Photo/Video, Background Color) */}
           <div className="flex flex-col gap-3">
-            <div className="bg-gray-100 p-3 rounded-lg flex justify-center">
-              <label htmlFor="file-upload" className="cursor-pointer flex items-center gap-2 text-blue-600 hover:text-blue-700">
+            <div className="bg-gray-100 hover:bg-gray-300 p-3 rounded-lg flex justify-center">
+              <label htmlFor="file-upload" className="cursor-pointer flex items-center gap-2 text-blue-600 hover:text-blue-900">
                 {file ? <Video size={20} /> : <Image size={20} />} {/* Icon changes if file selected */}
                 <span>{file ? "Change Photo/Video" : "Add Photo/Video"}</span>
               </label>
@@ -218,10 +218,10 @@ const AddStoryModal = ({ onClose, currentUser, onStoryPosted }) => {
 
             {/* Color picker only for text-only stories */}
             {!file && (
-              <div className="bg-gray-100 p-3 rounded-lg relative">
+              <div className="bg-gray-100 hover:bg-gray-300 p-3 rounded-lg relative">
                 <button
                   onClick={() => setShowColorPicker(!showColorPicker)}
-                  className="flex items-center gap-2 text-purple-600 hover:text-purple-700 w-full justify-center"
+                  className="flex items-center gap-2 cursor-pointer text-purple-600 hover:text-purple-900 w-full justify-center"
                 >
                   <Palette size={20} />
                   <span>Background Color</span>

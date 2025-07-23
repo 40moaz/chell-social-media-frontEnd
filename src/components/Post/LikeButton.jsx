@@ -16,6 +16,7 @@ const LikeButton = ({ postId, currentUserId }) => {
   const [likes, setLikes] = useState([]);
   const [userReaction, setUserReaction] = useState(null);
   const [showReactions, setShowReactions] = useState(false);
+  const longPressTimer = React.useRef(null);
 
   useEffect(() => {
     const fetchLikes = async () => {
@@ -89,6 +90,9 @@ const LikeButton = ({ postId, currentUserId }) => {
     if (num >= 1000) return (num / 1000).toFixed(1).replace(".0", "") + "K";
     return num.toString();
   };
+  useEffect(() => {
+    return () => clearTimeout(longPressTimer.current);
+  }, []);
 
   if (!postId || !currentUserId) return null;
 
@@ -97,6 +101,17 @@ const LikeButton = ({ postId, currentUserId }) => {
       className="relative inline-block"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={() => {
+        longPressTimer.current = setTimeout(() => {
+          setShowReactions(true);
+        }, 600);
+      }}
+      onTouchEnd={() => {
+        clearTimeout(longPressTimer.current);
+        if (!showReactions) {
+          handleReaction("like");
+        }
+      }}
     >
       {/* Main Button */}
       <div

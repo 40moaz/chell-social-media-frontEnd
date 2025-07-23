@@ -174,7 +174,8 @@ const Messages = ({ currentUser, users = [] }) => {
     }
   };
 
-  const handleSend = async () => {
+  const handleSend = async (e) => {
+    e.preventDefault();
     if (!content.trim() || !selectedUser || !currentUser) return;
     const newMessage = {
       sender: currentUser._id,
@@ -251,24 +252,31 @@ const Messages = ({ currentUser, users = [] }) => {
           </div>
 
           <div className="border-t bg-white px-4 py-2 flex items-center gap-2">
-            <button className="text-gray-500">
-              <FaPaperclip />
-            </button>
-            <input
-              value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-                handleTyping();
-              }}
-              placeholder="type your message..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm"
-            />
-            <button
-              onClick={handleSend}
-              className="bg-green-600 text-white text-sm px-4 py-2 rounded-lg"
+            <form
+              className="flex items-center gap-2 w-full"
+              onSubmit={handleSend}
             >
-              Send
-            </button>
+              <button type="button" className="text-gray-500">
+                <FaPaperclip />
+              </button>
+
+              <input
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                  handleTyping();
+                }}
+                placeholder="type your message..."
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm"
+              />
+
+              <button
+                type="submit"
+                className="bg-green-600 text-white text-sm px-4 py-2 rounded-lg"
+              >
+                Send
+              </button>
+            </form>
           </div>
         </div>
       ) : (
