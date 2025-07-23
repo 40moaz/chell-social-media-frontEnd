@@ -16,7 +16,6 @@ const LikeButton = ({ postId, currentUserId }) => {
   const [likes, setLikes] = useState([]);
   const [userReaction, setUserReaction] = useState(null);
   const [showReactions, setShowReactions] = useState(false);
-  const [hoverTimeout, setHoverTimeout] = useState(null);
 
   useEffect(() => {
     const fetchLikes = async () => {
@@ -112,7 +111,7 @@ const LikeButton = ({ postId, currentUserId }) => {
       >
         <span className="text-xl">
           {REACTIONS.find((r) => r.label === userReaction)?.emoji || (
-            <FaThumbsUp className="text-gray-400" />
+            <FaThumbsUp size={27} className="text-gray-400" />
           )}
         </span>
         <span className="text-gray-700 font-medium capitalize">

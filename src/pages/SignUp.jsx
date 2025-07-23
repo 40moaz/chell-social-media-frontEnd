@@ -258,6 +258,10 @@ const SignUp = () => {
         });
 
         localStorage.setItem("user", JSON.stringify(res.data.user));
+        const { token } = res.data;
+
+        localStorage.setItem("token", token);
+
         window.location.href = "/";
       } catch (error) {
         // Handle backend validation errors

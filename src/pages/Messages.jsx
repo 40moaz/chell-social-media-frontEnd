@@ -192,17 +192,12 @@ const Messages = ({ currentUser, users = [] }) => {
   };
   return (
     <div className="h-[85vh] border rounded-lg shadow overflow-hidden bg-white">
-            <BackButton onClick={() => navigate(-1)} />
+      <BackButton onClick={() => navigate(-1)} />
 
       {userId ? (
         <div className="flex flex-col h-full">
           <div className="px-4 py-3 border-b bg-white font-semibold text-lg flex items-center gap-4">
-            <button
-              onClick={() => navigate("/messages")}
-              className="text-sm text-blue-500 hover:underline"
-            >
-              ← Back
-            </button>
+            <BackButton onClick={() => navigate(-1)} />
             <span className="text-blue-600">{selectedUser?.fullName}</span>
             {isTyping && (
               <span className="ml-2 text-sm text-gray-400">typing...</span>

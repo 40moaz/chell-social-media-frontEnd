@@ -21,7 +21,7 @@ const PostFeed = ({
     return <p className="p-6 text-gray-500">No posts available.</p>;
 
   return (
-    <div className="rounded-lg shadow-sm mb-10">
+    <div className="rounded-lg shadow-sm mb-40">
       {posts.map((post) => {
         const postUser = postUsers[post.userId] || {};
         return (

@@ -3,12 +3,7 @@ import { Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import instance from "../axios/instance";
 
-const SuggestionsSidebar = ({
-  latestUsers,
-  modalImage,
-  setModalImage,
-  currentUser,
-}) => {
+const SuggestionsSidebar = ({ latestUsers, currentUser }) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -109,47 +104,6 @@ const SuggestionsSidebar = ({
           )}
         </div>
       </div>
-
-      {modalImage && (
-        <div
-          className="fixed inset-0 bg-[#000000bd] flex items-center justify-center z-50"
-          onClick={() => setModalImage(null)}
-        >
-          <div
-            className="relative max-h-[80vh] max-w-[90vw] rounded shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* زر الإغلاق */}
-            <div className="absolute top-2 right-2 z-10">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModalImage(null);
-                }}
-                className="cursor-pointer bg-white text-black font-bold rounded-full w-10 h-10 flex items-center justify-center shadow hover:bg-gray-200 transition"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* المحتوى */}
-            {modalImage.match(/\.(mp4|webm|ogg)$/i) ? (
-              <video
-                src={modalImage}
-                controls
-                autoPlay
-                className="max-h-[80vh] max-w-[90vw] rounded"
-              />
-            ) : (
-              <img
-                src={modalImage}
-                alt="Enlarged"
-                className="max-h-[80vh] max-w-[90vw] rounded object-contain"
-              />
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

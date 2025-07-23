@@ -31,12 +31,12 @@ function App() {
     const token = localStorage.getItem("token");
 
     try {
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      } else if (token) {
+      if (token) {
         const res = await instance.get("/auth/me");
         setUser(res.data);
         localStorage.setItem("user", JSON.stringify(res.data));
+      } else if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
     } catch (error) {
       console.error("❌ Failed to fetch user:", error);

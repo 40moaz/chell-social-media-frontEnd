@@ -15,7 +15,7 @@ export default function PostActions({
         onClick={onComment}
         className=" cursor-pointer gap-1 px-5 flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded"
       >
-        <FaComment size={24} />
+        <FaComment size={27} />
         <span>Comment</span>
       </button>
 
@@ -23,7 +23,7 @@ export default function PostActions({
         onClick={onShare}
         className="cursor-pointer gap-1 px-5 flex items-center justify-center space-x-2 py-2 hover:bg-gray-100 rounded"
       >
-        <FaShare size={24} />
+        <FaShare size={27} />
         <span>Share</span>
       </button>
     </div>

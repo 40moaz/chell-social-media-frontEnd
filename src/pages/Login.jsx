@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FaGoogle, FaTwitter, FaFacebookF } from "react-icons/fa";
 import instance from "../axios/instance";
 
@@ -8,7 +8,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState("");
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,10 +30,8 @@ const Login = () => {
 
       const { token } = res.data;
 
-      // احفظ التوكن والمستخدم في localStorage
       localStorage.setItem("token", token);
 
-      // روح للداشبورد أو الصفحة الرئيسية
       window.location.href = "/";
     } catch (err) {
       if (err.response?.data?.message) {

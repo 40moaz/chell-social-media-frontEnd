@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import instance from "../axios/instance";
 import StoriesSection from "../components/StoriesSection";
 import ComposePost from "../components/Post/ComposePost";
@@ -41,7 +41,10 @@ const Home = ({ user }) => {
     try {
       await instance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((p) => p._id !== postId));
-      toast.success("Post deleted successfully ✅", { position: "top-center", autoClose: 1000 });
+      toast.success("Post deleted successfully ✅", {
+        position: "top-center",
+        autoClose: 1000,
+      });
     } catch (err) {
       toast.error("Failed to delete the post ❌", { position: "top-center" });
       console.log(err);
@@ -207,7 +210,7 @@ const Home = ({ user }) => {
 
         {commentPost && (
           <CommentModal
-          setModalImage={setModalImage}
+            setModalImage={setModalImage}
             post={commentPost}
             onClose={closeCommentModal}
             onAddComment={handleAddComment}
@@ -221,14 +224,48 @@ const Home = ({ user }) => {
       </div>
 
       {/* Right Sidebar */}
-      <SuggestionsSidebar
-        currentUser={user}
-        latestUsers={latestUsers}
-        modalImage={modalImage}
-        setModalImage={setModalImage}
-      />
+      <SuggestionsSidebar currentUser={user} latestUsers={latestUsers} />
       {sharePost && (
         <ShareModal post={sharePost} onClose={() => setSharePost(null)} />
+      )}
+      {modalImage && (
+        <div
+          className="fixed inset-0 bg-[#000000bd] flex items-center justify-center z-50"
+          onClick={() => setModalImage(null)}
+        >
+          <div
+            className="relative max-h-[80vh] max-w-[90vw] rounded shadow-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-2 right-2 z-10">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalImage(null);
+                }}
+                className="cursor-pointer bg-white text-black font-bold rounded-full w-10 h-10 flex items-center justify-center shadow hover:bg-gray-200 transition"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* المحتوى */}
+            {modalImage.match(/\.(mp4|webm|ogg)$/i) ? (
+              <video
+                src={modalImage}
+                controls
+                autoPlay
+                className="max-h-[80vh] max-w-[90vw] rounded"
+              />
+            ) : (
+              <img
+                src={modalImage}
+                alt="Enlarged"
+                className="max-h-[80vh] max-w-[90vw] rounded object-contain"
+              />
+            )}
+          </div>
+        </div>
       )}
       <ToastContainer />
     </div>
