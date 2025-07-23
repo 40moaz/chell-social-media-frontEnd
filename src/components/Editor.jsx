@@ -1,85 +1,94 @@
 import React, { useState, useRef } from "react";
-import { FaCamera } from "react-icons/fa";
+import { FaCamera, FaVideo } from "react-icons/fa";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import { toast, ToastContainer } from "react-toastify"; // استيراد toast
-import "react-toastify/dist/ReactToastify.css"; // استيراد ستايلات toast
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import instance from "../axios/instance";
 
 const CLOUDINARY_CLOUD_NAME = "ddxwe3wy1";
 const CLOUDINARY_UPLOAD_PRESET = "chell-social-media";
-import instance from "../axios/instance";
 
 export default function Editor({ userId, onPostCreated }) {
   const [text, setText] = useState("");
-  const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef();
+  const [mediaFiles, setMediaFiles] = useState([]);
 
-  const handleFileChange = (e) => {
-    setFiles([...e.target.files]);
+  const imageInputRef = useRef();
+  const videoInputRef = useRef();
+
+  const handleFileChange = (e, type) => {
+    const selected = Array.from(e.target.files).map((file) => ({
+      file,
+      type,
+    }));
+    setMediaFiles((prev) => [...prev, ...selected]);
   };
 
-  const handleRemoveImage = (index) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveMedia = (index) => {
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
   };
-const handlePost = async () => {
-  if (!text.trim() && files.length === 0) return;
 
-  setUploading(true);
-  const uploadedUrls = [];
+  const handlePost = async () => {
+    if (!text.trim() && mediaFiles.length === 0) return;
 
-  for (const file of files) {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    setUploading(true);
+    const uploadedImages = [];
+    const uploadedVideos = [];
+
+    for (const item of mediaFiles) {
+      const formData = new FormData();
+      formData.append("file", item.file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        const data = await res.json();
+        if (data.secure_url) {
+          if (item.type === "image") uploadedImages.push(data.secure_url);
+          else if (item.type === "video") uploadedVideos.push(data.secure_url);
+        }
+      } catch (err) {
+        console.error("Upload error:", err);
+        toast.error("Error uploading media.");
+        setUploading(false);
+        return;
+      }
+    }
 
     try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await instance.post("/posts", {
+        userId,
+        text,
+        images: uploadedImages,
+        videos: uploadedVideos,
+      });
 
-      const data = await res.json();
+      toast.success("Post created successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
 
-      if (data.secure_url) {
-        uploadedUrls.push(data.secure_url);
-      } else {
-        throw new Error("Upload failed");
+      setText("");
+      setMediaFiles([]);
+
+      if (onPostCreated) {
+        onPostCreated(response.data);
       }
     } catch (err) {
-      console.error("Upload error:", err);
-      toast.error("Error uploading images.");
+      console.error("Post creation error:", err);
+      toast.error("Failed to create post.");
+    } finally {
       setUploading(false);
-      return;
     }
-  }
-  try {
-    const response = await instance.post("/posts", {
-      userId,
-      text,
-      images: uploadedUrls,
-    });
+  };
 
-    toast.success("Post created successfully!");
-    setText("");
-    setFiles([]);
-
-    // هنا بنضيف البوست الجديد فوراً في الـ feed
-    if (onPostCreated) {
-      onPostCreated(response.data);
-    }
-  } catch (err) {
-    console.error("Post creation error:", err);
-    toast.error("Failed to create post.");
-  } finally {
-    setUploading(false);
-  }
-};
-
-
-  const canPost = (text.trim().length > 0 || files.length > 0) && !uploading;
+  const canPost = (text.trim().length > 0 || mediaFiles.length > 0) && !uploading;
 
   return (
     <>
@@ -91,20 +100,28 @@ const handlePost = async () => {
         onChange={(e) => setText(e.target.value)}
       />
 
-      {files.length > 0 && (
-        <div className="grid grid-cols-3 gap-2 relative mt-2">
-          {files.map((file, i) => (
+      {mediaFiles.length > 0 && (
+        <div className="grid grid-cols-3 gap-2 mt-2">
+          {mediaFiles.map((item, i) => (
             <div key={i} className="relative">
-              <img
-                src={URL.createObjectURL(file)}
-                alt="preview"
-                className="h-24 w-full object-cover rounded border"
-              />
+              {item.type === "image" ? (
+                <img
+                  src={URL.createObjectURL(item.file)}
+                  alt="preview"
+                  className="h-24 w-full object-cover rounded border"
+                />
+              ) : (
+                <video
+                  src={URL.createObjectURL(item.file)}
+                  className="h-24 w-full object-cover rounded border"
+                  controls
+                />
+              )}
               <button
                 type="button"
-                onClick={() => handleRemoveImage(i)}
+                onClick={() => handleRemoveMedia(i)}
                 className="absolute -top-2 -right-2 text-red-600 bg-white rounded-full hover:text-red-800"
-                title="Remove image"
+                title="Remove"
               >
                 <AiOutlineCloseCircle size={20} />
               </button>
@@ -114,26 +131,40 @@ const handlePost = async () => {
       )}
 
       <div className="flex justify-between items-center gap-4 mt-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => imageInputRef.current.click()}
             className="flex items-center gap-2 text-blue-600 hover:underline"
           >
             <FaCamera className="text-xl" />
-            Images
+            images
           </button>
           <input
             type="file"
-            ref={fileInputRef}
+            ref={imageInputRef}
             multiple
             accept="image/*"
-            onChange={handleFileChange}
+            onChange={(e) => handleFileChange(e, "image")}
             className="hidden"
           />
-          <span className="text-sm text-gray-500">
-            {files.length > 0 && `${files.length} file(s) selected`}
-          </span>
+
+          <button
+            type="button"
+            onClick={() => videoInputRef.current.click()}
+            className="flex items-center gap-2 text-purple-600 hover:underline"
+          >
+            <FaVideo className="text-xl" />
+            videos
+          </button>
+          <input
+            type="file"
+            ref={videoInputRef}
+            multiple
+            accept="video/*"
+            onChange={(e) => handleFileChange(e, "video")}
+            className="hidden"
+          />
         </div>
 
         <button
@@ -145,11 +176,10 @@ const handlePost = async () => {
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          {uploading ? "Uploading..." : "Post"}
+          {uploading ? "Uploading" : "Post"}
         </button>
       </div>
 
-      {/* هنا تضيف ToastContainer مرة واحدة في الكومبوننت */}
       <ToastContainer position="top-right" autoClose={3000} />
     </>
   );

@@ -54,7 +54,7 @@ const CommentItem = ({ comment, user, timeAgo, onDeleteComment, currentUserId })
           </div>
 
           <span className="text-xs text-gray-500">
-            {timeAgo(comment.createdAt)}
+            {timeAgo}
           </span>
         </div>
 

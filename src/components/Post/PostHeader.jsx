@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+
 import PostHoverCard from "./PostHoverCard";
 
 const PostHeader = ({ post, postUsers, timeAgo }) => {
@@ -27,7 +26,7 @@ const PostHeader = ({ post, postUsers, timeAgo }) => {
           <PostHoverCard user={postUser} />
 
           <p className="text-xs text-gray-500">
-            {timeAgo(post.createdAt)}
+            {timeAgo} •{" "}
           </p>
         </div>
       </div>

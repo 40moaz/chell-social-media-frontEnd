@@ -35,7 +35,7 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       // روح للداشبورد أو الصفحة الرئيسية
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
       if (err.response?.data?.message) {
         setServerError(err.response.data.message);

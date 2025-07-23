@@ -1,12 +1,12 @@
 import React from "react";
 import PostCard from "./PostCard";
+import moment from "moment";
 
 const PostFeed = ({
   posts,
+  currentUser,
   postUsers,
   loading,
-  timeAgo,
-  onLike,
   onComment,
   onShare,
   isPostOwner,
@@ -21,18 +21,19 @@ const PostFeed = ({
     return <p className="p-6 text-gray-500">No posts available.</p>;
 
   return (
-    <div className="rounded-lg shadow-sm">
+    <div className="rounded-lg shadow-sm mb-10">
       {posts.map((post) => {
         const postUser = postUsers[post.userId] || {};
         return (
           <PostCard
             key={post._id}
+            postId={post._id}
             post={post}
             user={postUser}
-            timeAgo={timeAgo}
-            onLike={() => onLike(post._id)}
+            currentUser={currentUser}
+            timeAgo={moment(post.createdAt).fromNow()}
             onComment={() => onComment(post)}
-            onShare={() => onShare(post._id)}
+            onShare={() => onShare(post)}
             isOwner={isPostOwner(post.userId)}
             openMenuPostId={openMenuPostId}
             setOpenMenuPostId={setOpenMenuPostId}

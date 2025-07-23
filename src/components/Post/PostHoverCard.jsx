@@ -20,7 +20,7 @@ const PostHoverCard = ({ user }) => {
       </Link>
 
       {isHovering && (
-        <div className="absolute z-50 flex flex-col bg-white border border-gray-200 shadow-lg rounded-lg p-4 min-w-[250px] bottom-full left-0 mt-1">
+        <div className="absolute z-50 flex flex-col bg-white border border-gray-200 shadow-lg rounded-lg p-4 min-w-[250px] top-full left-0 mt-1">
           <div className="flex items-center gap-3">
             <img
               src={user.profileImage || "https://placehold.co/60x60?text=User"}

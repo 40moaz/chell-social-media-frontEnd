@@ -1,14 +1,15 @@
 import React from "react";
 import PostHeader from "./PostHeader";
-import PostImages from "./PostImages";
+import PostFiles from "./PostFiles";
 import PostActions from "./PostActions";
 import { confirmAlert } from "react-confirm-alert";
 
 const PostCard = ({
   post,
+  postId,
   user,
+  currentUser,
   timeAgo,
-  onLike,
   onComment,
   onShare,
   isOwner,
@@ -18,6 +19,7 @@ const PostCard = ({
   setModalImage,
   onDeletePost,
 }) => {
+  console.log(post._id);
   return (
     <div className="border-b mt-2 bg-white border-gray-300 last:border-b-0 p-4 relative">
       <div className="flex items-center mb-3 justify-between">
@@ -25,7 +27,6 @@ const PostCard = ({
           post={post}
           postUsers={{ [user._id]: user }}
           timeAgo={timeAgo}
-          isOwner={isOwner}
           openMenuPostId={openMenuPostId}
           setOpenMenuPostId={setOpenMenuPostId}
           menuRef={menuRef}
@@ -37,7 +38,7 @@ const PostCard = ({
               onClick={() =>
                 setOpenMenuPostId(openMenuPostId === post._id ? null : post._id)
               }
-              className="text-gray-600 text-2xl hover:text-gray-900 focus:outline-none"
+              className="cursor-pointer text-gray-600 text-2xl hover:text-gray-900 focus:outline-none"
             >
               &#x22EE;
             </button>
@@ -70,23 +71,27 @@ const PostCard = ({
                 >
                   Delete
                 </button>
-
-                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                  Share
-                </button>
               </div>
             )}
           </div>
         )}
       </div>
-
       <p className="text-gray-800 mb-3 whitespace-pre-wrap">{post.text}</p>
-
-      {post.images && post.images.length > 0 && (
-        <PostImages images={post.images} setModalImage={setModalImage} />
+      {(post.images.length > 0 || post.videos.length > 0) && (
+        <PostFiles
+          videos={post.videos}
+          images={post.images}
+          setModalImage={setModalImage}
+        />
       )}
-
-      <PostActions onLike={onLike} onComment={onComment} onShare={onShare} />
+      {postId && (
+        <PostActions
+          postId={postId}
+          currentUser={currentUser}
+          onComment={onComment}
+          onShare={onShare}
+        />
+      )}
     </div>
   );
 };

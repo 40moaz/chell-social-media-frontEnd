@@ -6,7 +6,7 @@ const token = localStorage.getItem("token"); // optional
 console.log(token);
 
 const instance = axios.create({
-  baseURL: "https://chell-social-media-back-end.vercel.app/api", // أو من .env
+  baseURL: "https://chell-social-media-backend-production.up.railway.app/api",
   headers: {
     "Content-Type": "application/json",
     ...(token && { Authorization: `Bearer ${token}` }),

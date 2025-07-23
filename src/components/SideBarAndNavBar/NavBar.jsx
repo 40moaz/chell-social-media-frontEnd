@@ -21,9 +21,13 @@ const Navbar = () => {
     <nav className="bg-[#fff] border-t-1 shadow-md z-50 fixed bottom-0 left-0 w-full md:relative md:hidden">
       {/* Top bar: Logo & actions */}
       <div className="flex items-center justify-between px-4 py-2">
-        <a href="/" className="text-2xl font-extrabold text-[#5858FA]">Chell</a>
+        <a href="/" className="text-2xl font-extrabold text-[#5858FA]">
+          Chell
+        </a>
         <div className="flex items-center gap-3 text-2xl  text-[#5858FA]">
-          <CiSearch className="cursor-pointer " />
+          <Link to="/search">
+            <CiSearch className="cursor-pointer " />
+          </Link>
           <Link to="/profile">
             <CiUser className="cursor-pointer " />
           </Link>

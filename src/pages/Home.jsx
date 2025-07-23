@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Loader2 } from "lucide-react";
 import instance from "../axios/instance";
 import StoriesSection from "../components/StoriesSection";
 import ComposePost from "../components/Post/ComposePost";
@@ -10,7 +10,7 @@ import PostFeed from "../components/Post/PostFeed";
 import CommentModal from "../components/Comment/CommentModal";
 import SuggestionsSidebar from "../components/SuggestionsSidebar";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import the CSS
-
+import ShareModal from "../components/ShareModal";
 const Home = ({ user }) => {
   const { posts: parentPosts, setPosts } = useOutletContext();
   const [modalImage, setModalImage] = useState(null);
@@ -19,6 +19,7 @@ const Home = ({ user }) => {
   const [latestUsers, setLatestUsers] = useState([]);
   const [openMenuPostId, setOpenMenuPostId] = useState(null);
   const [commentPost, setCommentPost] = useState(null);
+  const [sharePost, setSharePost] = useState(null);
 
   const posts = parentPosts;
   const menuRef = useRef(null);
@@ -33,12 +34,17 @@ const Home = ({ user }) => {
     }
   };
   const handleDeletePost = async (postId) => {
+    if (!window.confirm("Are you sure you want to delete this post?")) {
+      // Use custom modal instead of window.confirm in production
+      return;
+    }
     try {
       await instance.delete(`/posts/${postId}`);
       setPosts((prevPosts) => prevPosts.filter((p) => p._id !== postId));
-      toast.success("Post deleted successfully ✅", { position: "top-center" });
+      toast.success("Post deleted successfully ✅", { position: "top-center", autoClose: 1000 });
     } catch (err) {
       toast.error("Failed to delete the post ❌", { position: "top-center" });
+      console.log(err);
     }
   };
 
@@ -75,8 +81,9 @@ const Home = ({ user }) => {
     }
   };
 
-  const handleLike = (postId) => toast.info(`Liked post ${postId}`);
-  const handleShare = (postId) => toast.info(`Shared post ${postId}`);
+  const handleShare = (post) => {
+    setSharePost(post);
+  };
 
   const addNewPost = async (post) => {
     if (!postUsers[post.userId]) {
@@ -101,13 +108,13 @@ const Home = ({ user }) => {
       console.log(res.data);
       toast.success("Your Comment was added ✅", {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     } catch (error) {
       console.error(error);
       toast.error("Add failed. Try Again ❌", {
         position: "top-center",
-        autoClose: 3000,
+        autoClose: 1000,
       });
     }
   };
@@ -165,23 +172,29 @@ const Home = ({ user }) => {
       alt: "User 4",
     },
   ];
-
+  if (loading)
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-600">
+        <Loader2 size={48} className="animate-spin text-blue-500 mb-4" />
+        <p className="text-xl font-semibold">Loading user data...</p>
+        <p className="text-sm mt-1">Please wait a moment.</p>
+      </div>
+    );
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100 font-inter">
       {/* Main Area */}
       <div className="flex-grow pt-3">
         <h1 className="text-3xl font-bold text-gray-800 mb-3">Home</h1>
 
-        <StoriesSection stories={stories} />
+        <StoriesSection currentUser={user} stories={stories} />
         <ComposePost onPostCreated={addNewPost} userId={user._id} />
 
         <PostFeed
           posts={posts}
+          currentUser={user}
           postUsers={postUsers}
           loading={loading}
-          timeAgo={timeAgo}
           currentUserId={user._id}
-          onLike={handleLike}
           onComment={openCommentModal}
           onShare={handleShare}
           isPostOwner={isPostOwner}
@@ -194,23 +207,29 @@ const Home = ({ user }) => {
 
         {commentPost && (
           <CommentModal
+          setModalImage={setModalImage}
             post={commentPost}
             onClose={closeCommentModal}
             onAddComment={handleAddComment}
+            onShare={handleShare}
             timeAgo={timeAgo}
             postUsers={postUsers}
             currentUserId={user._id}
+            currentUser={user}
           />
         )}
       </div>
 
       {/* Right Sidebar */}
       <SuggestionsSidebar
+        currentUser={user}
         latestUsers={latestUsers}
         modalImage={modalImage}
         setModalImage={setModalImage}
       />
-
+      {sharePost && (
+        <ShareModal post={sharePost} onClose={() => setSharePost(null)} />
+      )}
       <ToastContainer />
     </div>
   );

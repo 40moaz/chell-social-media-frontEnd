@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   CiHome,
   CiBellOn,
@@ -9,6 +10,7 @@ import {
   CiCalendar,
 } from "react-icons/ci";
 import { NavLink } from "react-router-dom";
+import instance from "../../axios/instance";
 const Sidebar = ({ user, onOpenEditor }) => {
   const navItemStyle = ({ isActive }) =>
     `flex items-center gap-3 cursor-pointer px-2 py-1 rounded-md transition ${
@@ -16,7 +18,18 @@ const Sidebar = ({ user, onOpenEditor }) => {
         ? "text-blue-600 font-semibold"
         : "text-gray-500 hover:text-blue-600"
     }`;
+  const [unseenCount, setUnseenCount] = useState(0);
 
+  useEffect(() => {
+    if (user?._id) {
+      instance
+        .get(`/notifications/unseen-count/${user._id}`)
+        .then((res) => setUnseenCount(res.data.count))
+        .catch((err) =>
+          console.error("Failed to fetch unseen notifications", err)
+        );
+    }
+  }, [user]);
   return (
     <aside
       style={{ border: "1px solid #E5E5E5" }}
@@ -47,11 +60,16 @@ const Sidebar = ({ user, onOpenEditor }) => {
             <CiHome size={22} /> Home
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/notifications" className={navItemStyle}>
+        <li className="relative">
+          <NavLink     onClick={() => setUnseenCount(0)}  to="/notifications" className={navItemStyle}>
             <CiBellOn size={22} /> Notifications
           </NavLink>
+
+          {unseenCount > 0 && (
+            <span className="absolute top-0 left-5 w-2.5 h-2.5 bg-red-600 rounded-full animate-ping"></span>
+          )}
         </li>
+
         <li>
           <NavLink to="/messages" className={navItemStyle}>
             <CiMail size={22} /> Messages
