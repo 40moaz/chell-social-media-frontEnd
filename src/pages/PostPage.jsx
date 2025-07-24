@@ -9,7 +9,7 @@ import CommentModal from "../components/Comment/CommentModal";
 import { X } from "lucide-react"; // Import the ArrowLeft icon
 import ShareModal from "../components/ShareModal";
 import BackButton from "../components/BackButton"; // Assuming you have a BackButton component
-const PostPage = ({ currentUser, sharePost, setSharePost, handleShare }) => {
+const PostPage = ({ currentUser }) => {
   const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -21,6 +21,11 @@ const PostPage = ({ currentUser, sharePost, setSharePost, handleShare }) => {
   const menuRef = useRef(null);
   const timeAgo = useCallback((dateString) => moment(dateString).fromNow(), []);
   console.log(postId);
+  const [sharePost, setSharePost] = useState(null);
+
+  const handleShare = (post) => {
+    setSharePost(post);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -151,9 +156,7 @@ const PostPage = ({ currentUser, sharePost, setSharePost, handleShare }) => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-2xl mx-auto bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-        <BackButton
-          onClick={() => navigate(-1)}
-          />
+        <BackButton onClick={() => navigate(-1)} />
 
         <PostCard
           currentUser={currentUser}

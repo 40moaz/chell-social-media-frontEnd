@@ -20,12 +20,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
-    const [sharePost, setSharePost] = useState(null);
-
-  const handleShare = (post) => {
-    setSharePost(post);
-  };
-
+    
   const fetchUser = useCallback(async () => {
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
@@ -90,11 +85,11 @@ function App() {
           />
           <Route
             path="/profile"
-            element={<Profile sharePost={sharePost} setSharePost={setSharePost} handleShare={handleShare} user={user} currentUser={user} />}
+            element={<Profile  user={user} currentUser={user} />}
           />
           <Route
             path="/posts/:postId"
-            element={<PostPage sharePost={sharePost} setSharePost={setSharePost} handleShare={handleShare} currentUser={user} />}
+            element={<PostPage  currentUser={user} />}
           />
 
           <Route

@@ -11,13 +11,7 @@ import ShareModal from "../components/ShareModal"; // Assuming this component ex
 const CLOUDINARY_CLOUD_NAME = "ddxwe3wy1";
 const CLOUDINARY_UPLOAD_PRESET = "chell-social-media";
 
-const Profile = ({
-  currentUser,
-  onUserUpdate,
-  sharePost,
-  handleShare,
-  setSharePost,
-}) => {
+const Profile = ({ currentUser, onUserUpdate }) => {
   // Added onUserUpdate prop for global user state sync
   const { id } = useParams(); // ID from URL params (profile being viewed)
   const navigate = useNavigate();
@@ -47,6 +41,11 @@ const Profile = ({
 
   // State to track if currentUser is following the viewed profile user
   const [isFollowing, setIsFollowing] = useState(false);
+  const [sharePost, setSharePost] = useState(null);
+
+  const handleShare = (post) => {
+    setSharePost(post);
+  };
 
   // --- API Call Functions ---
 
