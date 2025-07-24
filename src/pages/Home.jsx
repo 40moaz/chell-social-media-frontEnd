@@ -179,7 +179,9 @@ const Home = ({ user }) => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-600">
         <Loader2 size={48} className="animate-spin text-blue-500 mb-4" />
-        <p className="text-xl font-semibold">Loading user data...</p>
+        <p className="text-xl font-semibold">Loading user data .
+          
+          ...</p>
         <p className="text-sm mt-1">Please wait a moment.</p>
       </div>
     );
