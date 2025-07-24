@@ -153,35 +153,11 @@ const Home = ({ user }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const stories = [
-    {
-      id: 1,
-      img: "https://placehold.co/80x80/FFD700/000000?text=User1",
-      alt: "User 1",
-    },
-    {
-      id: 2,
-      img: "https://placehold.co/80x80/ADD8E6/000000?text=User2",
-      alt: "User 2",
-    },
-    {
-      id: 3,
-      img: "https://placehold.co/80x80/90EE90/000000?text=User3",
-      alt: "User 3",
-    },
-    {
-      id: 4,
-      img: "https://placehold.co/80x80/90EE90/000000?text=User4",
-      alt: "User 4",
-    },
-  ];
   if (loading)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-600">
         <Loader2 size={48} className="animate-spin text-blue-500 mb-4" />
-        <p className="text-xl font-semibold">Loading user data .
-          
-          ...</p>
+        <p className="text-xl font-semibold">Loading user data ....</p>
         <p className="text-sm mt-1">Please wait a moment.</p>
       </div>
     );
@@ -191,7 +167,7 @@ const Home = ({ user }) => {
       <div className="flex-grow pt-3">
         <h1 className="text-3xl font-bold text-gray-800 mb-3">Home</h1>
 
-        <StoriesSection currentUser={user} stories={stories} />
+        <StoriesSection currentUser={user}  />
         <ComposePost onPostCreated={addNewPost} userId={user._id} />
 
         <PostFeed
