@@ -1,5 +1,3 @@
-// cropImageHelper.js
-
 export default async function getCroppedImg(imageSrc, crop) {
   const image = await createImage(imageSrc);
   const canvas = document.createElement("canvas");
@@ -22,8 +20,14 @@ export default async function getCroppedImg(imageSrc, crop) {
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => {
-      const url = URL.createObjectURL(blob);
-      resolve(url);
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        resolve({
+          dataUrl: reader.result, // ← لعرض الصورة
+          blob, // ← لرفع الصورة
+        });
+      };
     }, "image/jpeg");
   });
 }
@@ -33,7 +37,7 @@ function createImage(url) {
     const img = new Image();
     img.addEventListener("load", () => resolve(img));
     img.addEventListener("error", (error) => reject(error));
-    img.setAttribute("crossOrigin", "anonymous"); // to avoid CORS issues
+    img.setAttribute("crossOrigin", "anonymous");
     img.src = url;
   });
 }

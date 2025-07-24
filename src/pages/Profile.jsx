@@ -367,7 +367,20 @@ const Profile = ({
       )}
     </div>
   );
+  useEffect(() => {
+    console.log("croppedBlob inside useEffect:", croppedBlob);
+    if (croppedBlob) {
+      console.log("✅ updated croppedBlob in state:", croppedBlob);
+    }
+  }, [croppedBlob]);
 
+  const handleSave = (croppedDataUrl, croppedBlobFile) => {
+    setCroppedBlob(croppedBlobFile);
+    setSelectedImagePreview(croppedDataUrl);
+    console.log("b:", croppedBlobFile);
+    console.log("Received in profile page:", croppedDataUrl, croppedBlob);
+    setShowCropModal(false);
+  };
   const handleAddComment = async (commentText) => {
     if (!commentText.trim()) {
       toast.error("Comment cannot be empty.");
@@ -404,6 +417,8 @@ const Profile = ({
       });
     }
   };
+
+  console.log(croppedBlob);
 
   // --- Render Logic ---
 
@@ -528,14 +543,13 @@ const Profile = ({
         <div className="bg-white rounded-lg shadow p-4 space-y-2">
           {renderField("Location", user.location, "location")}
           {renderField("Website", user.website, "website")}
+          {/* Ensure birthday is formatted if it's a Date object */}
           {renderField(
             "Birthday",
             user.birthday ? moment(user.birthday).format("MMM D, YYYY") : null,
             "birthday"
           )}
           {renderField("Email", user.email, "email")}
-          {/* Add the new 'phone' field here */}
-          {renderField("Phone", user.phone, "phone")}
         </div>
       </div>
 
@@ -648,7 +662,7 @@ const Profile = ({
                   (["profileImage", "cover"].includes(showEditModal) &&
                     !croppedBlob)
                 }
-                onClick={handleSaveEdit} // Call the new consolidated save handler
+                onClick={handleSaveEdit} // Call the new  consolidated save handler
                 className={`px-4 py-2 text-white rounded ${
                   uploading ||
                   (["profileImage", "cover"].includes(showEditModal) &&
@@ -673,11 +687,7 @@ const Profile = ({
             setCropImageSrc(null); // Clear crop source on close
             setCroppedBlob(null); // Clear cropped blob if user cancels crop
           }}
-          onSave={(croppedDataUrl, croppedBlobFile) => {
-            setSelectedImagePreview(croppedDataUrl); // Set preview of the cropped image
-            setCroppedBlob(croppedBlobFile); // Store the actual Blob file
-            setShowCropModal(false); // Close crop modal
-          }}
+          onSave={handleSave}
         />
       )}
       {/* Comment Modal */}

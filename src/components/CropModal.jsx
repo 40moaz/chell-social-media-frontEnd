@@ -13,19 +13,20 @@ const CropModal = ({ imageSrc, onClose, onSave }) => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
-  const handleSave = async () => {
-    try {
-      setLoading(true);
-      const croppedDataUrl = await getCroppedImg(imageSrc, croppedAreaPixels);
-      const blob = await fetch(croppedDataUrl).then((r) => r.blob());
-      onSave(croppedDataUrl, blob); // 👈 بنبعت dataURL + Blob للـ Profile.jsx
-    } catch (err) {
-      console.error("❌ Failed to crop image:", err);
-    } finally {
-      setLoading(false);
-      onClose();
-    }
-  };
+const handleSave = async () => {
+  try {
+    setLoading(true);
+    const { dataUrl, blob } = await getCroppedImg(imageSrc, croppedAreaPixels);
+    onSave(dataUrl, blob); // ← كده تمام
+    console.log("✅ Cropped image ready:", dataUrl, blob);
+  } catch (err) {
+    console.error("❌ Failed to crop image:", err);
+  } finally {
+    setLoading(false);
+    onClose();
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
@@ -54,7 +55,9 @@ const CropModal = ({ imageSrc, onClose, onSave }) => {
             onClick={handleSave}
             disabled={loading}
             className={`px-4 py-2 text-white rounded ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
             {loading ? "Cropping..." : "Crop & Save"}
